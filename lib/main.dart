@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -19,7 +23,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -28,13 +32,25 @@ class MyHomePage extends StatelessWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePage extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> {
   List todos = List.empty();
   String title = "";
   String description = "";
   @override
   void initState() {
+    super.initState();
     todos = ["Hello", "Hey There"];
+  }
+
+  createTodo() {
+    DocumentReference documentReference = FirebaseFirestore.instance.collection("MyTodos").doc(title);
+    
+    Map<String, String> todoList = {
+      "todoTitle": title,
+      "todoDesc": description
+    };
+    
+    documentReference.set(todoList).whenComplete(() => print("Date stored successfuly"));
   }
 
   @override
@@ -45,13 +61,13 @@ class _MyHomePage extends State<MyHomePage> {
       ),
       body: ListView.builder(
           shrinkWrap: true,
-          itemCount: todos.lenghth,
+          itemCount: todos.length,
           itemBuilder: (BuildContext context, int index) {
-            return Dimissible(
+            return Dismissible(
                 key: Key(index.toString()),
                 child: Card(
                   elevation: 4,
-                  child: ListTitle(
+                  child: ListTile(
                     title: const Text("Description"),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
@@ -97,7 +113,8 @@ class _MyHomePage extends State<MyHomePage> {
                         onPressed: ()
                         {
                           setState(() {
-                            todos.add(title);
+                            //todos.add(title);
+                            createTodo();
                           });
                           Navigator.of(context).pop();
                         },

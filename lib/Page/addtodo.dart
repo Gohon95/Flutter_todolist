@@ -1,54 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todolist2/Page/home.dart';
 
-import 'Page/addtodo.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const Todo());
-}
-
-class Todo extends StatelessWidget {
-  const Todo({Key? key}) : super(key: key);
+class Addtodo extends StatefulWidget {
+  const Addtodo({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Todolist',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      routes: {
-        '/home': (context) => const Home(),
-        '/addtodo': (context) => const Addtodo(),
-      },
-      home: const Home(),
-    );
-  }
+  State<Addtodo> createState() => _AddtodoState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _AddtodoState extends State<Addtodo> {
   List todos = List.empty();
-  String title = "qqq";
+  String title = "Todo";
   String description = "bb";
+
   @override
   void initState() {
     super.initState();
     todos = ["Hello", "Hey There"];
   }
-
   createTodo() {
     CollectionReference ref = FirebaseFirestore.instance.collection("MyTodos");
 
@@ -59,12 +29,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     ref.add(todoList).whenComplete(() => print("Date stored successfuly"));
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: ListView.builder(
           shrinkWrap: true,
@@ -97,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   title: const Text("Add Todo"),
-                  content: Container(
+                  content: SizedBox(
                     width: 400,
                     height: 100,
                     child: Column(

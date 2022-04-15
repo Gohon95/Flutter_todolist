@@ -5,11 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(const Todo());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Todo extends StatelessWidget {
+  const Todo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List todos = List.empty();
-  String title = "";
-  String description = "";
+  String title = "qqq";
+  String description = "bb";
   @override
   void initState() {
     super.initState();
@@ -43,14 +43,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   createTodo() {
-    DocumentReference documentReference = FirebaseFirestore.instance.collection("MyTodos").doc(title);
+    CollectionReference ref = FirebaseFirestore.instance.collection("MyTodos");
     
     Map<String, String> todoList = {
       "todoTitle": title,
       "todoDesc": description
     };
     
-    documentReference.set(todoList).whenComplete(() => print("Date stored successfuly"));
+    ref.add(todoList).whenComplete(() => print("Date stored successfuly"));
   }
 
   @override
@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Card(
                   elevation: 4,
                   child: ListTile(
-                    title: const Text("Description"),
+                    title: const Text("à faire"),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       color: Colors.red,
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: ()
                         {
                           setState(() {
-                            //todos.add(title);
+                            todos.add(title);
                             createTodo();
                           });
                           Navigator.of(context).pop();

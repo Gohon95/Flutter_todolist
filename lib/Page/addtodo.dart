@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Addtodo extends StatefulWidget {
@@ -19,44 +18,62 @@ class _AddtodoState extends State<Addtodo> {
     super.initState();
     todos = ["Hello", "Hey There"];
   }
-  createTodo() {
-    CollectionReference ref = FirebaseFirestore.instance.collection("MyTodos");
+  createToDo() {
+    DocumentReference documentReference =
+    FirebaseFirestore.instance.collection("MyTodos").doc(title);
 
     Map<String, String> todoList = {
       "todoTitle": title,
       "todoDesc": description
     };
 
-    ref.add(todoList).whenComplete(() => print("Date stored successfuly"));
+    documentReference
+        .set(todoList)
+        .whenComplete(() => print("Data stored successfully"));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
-      body: ListView.builder(
-          shrinkWrap: true,
-          itemCount: todos.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-                key: Key(index.toString()),
-                child: Card(
-                  elevation: 4,
-                  child: ListTile(
-                    title: const Text("à faire"),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      color: Colors.red,
-                      onPressed: () {
-                        setState(() {
-                          todos.removeAt(index);
-                        });
-                      },
-                    ),
-                  ),
-                ));
-          }),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection("MyTodos").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
+          } else if (snapshot.hasData || snapshot.data != null) {
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data?.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  QueryDocumentSnapshot<Object?>? documentSnapshot =
+                  snapshot.data?.docs[index];
+                  return Dismissible(
+                      key: Key(index.toString()),
+                      child: Card(
+                        elevation: 4,
+                        child: ListTile(
+                          title: Text((documentSnapshot != null) ? (documentSnapshot["todoTitle"]) : ""),
+                          subtitle: Text((documentSnapshot != null)
+                              ? ((documentSnapshot["todoDesc"] != null)
+                              ? documentSnapshot["todoDesc"]
+                              : "")
+                              : ""),
+                        ),
+                      ));
+                });
+          }
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.red,
+              ),
+            ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -73,7 +90,7 @@ class _AddtodoState extends State<Addtodo> {
                       children: [
                         TextField(
                           onChanged: (String value) {
-                            description = value;
+                            title = value;
                           },
                         ),
                         TextField(
@@ -86,11 +103,10 @@ class _AddtodoState extends State<Addtodo> {
                   ),
                   actions: <Widget>[
                     TextButton(
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           setState(() {
                             todos.add(title);
-                            createTodo();
+                            createToDo();
                           });
                           Navigator.of(context).pop();
                         },

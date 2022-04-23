@@ -10,7 +10,7 @@ class Addtodo extends StatefulWidget {
 
 class _AddtodoState extends State<Addtodo> {
   List todos = List.empty();
-  String title = "Todo";
+  String title = "Add Todo";
   String description = "bb";
 
   @override

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todolist2/Page/home.dart';
+import 'package:todolist2/Page/todolist.dart';
+import 'package:todolist2/Page/deleteTodo.dart';
 
 import 'Page/addtodo.dart';
 import 'Page/deleteTodo.dart';
+import 'Page/todolist.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +28,7 @@ class Todo extends StatelessWidget {
         '/home': (context) => const Home(),
         '/addtodo': (context) => const Addtodo(),
         '/deletetodo': (context) => const DeleteTodo(),
+        '/todolist': (context) => const Todolist(),
       },
       home: const Home(),
     );

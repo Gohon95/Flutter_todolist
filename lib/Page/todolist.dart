@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DeleteTodo extends StatefulWidget {
-  const DeleteTodo({Key? key}) : super(key: key);
+class Todolist extends StatefulWidget {
+  const Todolist({Key? key}) : super(key: key);
 
   @override
-  State<DeleteTodo> createState() => _DeleteTodoState();
+  State<Todolist> createState() => _TodolistState();
 }
 
-class _DeleteTodoState extends State<DeleteTodo> {
+class _TodolistState extends State<Todolist> {
   List todos = List.empty();
-  String title = "Delete Todo";
+  String title = "Add Todo";
   String description = "bb";
 
   @override
@@ -19,13 +19,6 @@ class _DeleteTodoState extends State<DeleteTodo> {
     todos = ["Hello", "Hey There"];
   }
 
-  deleteTodo(item) {
-
-    DocumentReference documentReference =
-    FirebaseFirestore.instance.collection("MyTodos").doc(item);
-
-    documentReference.delete().whenComplete(() => print("deleted successfully"));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +49,6 @@ class _DeleteTodoState extends State<DeleteTodo> {
                               ? documentSnapshot["todoDesc"]
                               : "")
                               : ""),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            color: Colors.red,
-                            onPressed: () {
-                              setState(() {
-                                //todos.removeAt(index);
-                                deleteTodo((documentSnapshot != null) ? (documentSnapshot["todoTitle"]) : "");
-                              });
-                            },
-                          ),
                         ),
                       ));
                 });

@@ -6,28 +6,47 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
-      appBar: AppBar(title: const Text('Home')),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'deletetodo', )
-        ],
+      appBar: AppBar(
+        title: const Text('Home'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ElevatedButton(
-            onPressed: () async => await Navigator.of(context).pushNamed('/addtodo'), child: const Text('Add Todo'),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 18),
+                  ElevatedButton(
+                    child: const Text('Todo List'),
+                    onPressed: () async => await Navigator.of(context).pushNamed('/todolist'),
+                  ),
+                  ElevatedButton(
+                    child: const Text('Add Todo'),
+                    onPressed: () async => await Navigator.of(context).pushNamed('/addtodo'),
+                  ),
+                ],
+              ),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async => await Navigator.of(context).pushNamed('/deletetodo'), child: const Text('Delete Todo'),
+          Container(
+            padding: const EdgeInsets.only(bottom: 15, left: 5),
+            child: Row(
+              children: [
+                const FlutterLogo(),
+                Text(
+                  'Microsoft Todo',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ],
+            ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () async => await Navigator.of(context).pushNamed('/deletetodo'), child: const Text('Delete'),
+        tooltip: 'Increment',
       ),
     );
   }

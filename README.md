@@ -1,6 +1,10 @@
 # todolist
 
-A new Flutter project.
+- Page pour ajouter une tâche
+- Page pour consulter les tâches
+- Pages pour supprimer une tâche
+
+Connecter avec Firebase pour sauvegarder les données.
 
 ## Getting Started
 
